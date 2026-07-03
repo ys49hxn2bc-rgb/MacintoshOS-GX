@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MacintoshOS GX</title>
+
+<style>
+html,body{
+margin:0;
+height:100%;
+overflow:hidden;
+font-family:system-ui;
+background:black;
+}
+
+/* ================= LOCK ================= */
+#lockScreen{
+position:fixed;
+inset:0;
+z-index:9999;
+}
+
+#lockWallpaper{
+position:absolute;
+inset:0;
+background-image:url("https://i.pinimg.com/736x/68/79/af/6879af5a3cbfd6bb621597d86952f7f7.jpg");
+background-size:cover;
+background-position:center;
+}
+
+.lockGlass{
+position:absolute;
+inset:0;
+display:flex;
+align-items:center;
+justify-content:center;
+backdrop-filter:blur(20px);
+}
+
+/* SYSTEM LOGIN BAR */
+.systemBar{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:38px;
+background:rgba(120,0,255,0.65);
+display:flex;
+align-items:center;
+padding-left:12px;
+color:white;
+font-weight:bold;
+}
+
+/* LOGIN */
+.loginBox{
+width:340px;
+padding:22px;
+border-radius:18px;
+background:rgba(0,0,0,0.78);
+color:white;
+display:flex;
+flex-direction:column;
+gap:12px;
+}
+
+.loginBox input{
+padding:10px 14px;
+border-radius:999px;
+border:none;
+outline:none;
+background:#111;
+color:white;
+text-align:center;
+}
+
+.loginBox button{
+padding:10px;
+border-radius:999px;
+border:none;
+cursor:pointer;
+background:rgba(120,0,255,0.8);
+color:white;
+}
+
+/* ================= DESKTOP ================= */
+#desktop{
+display:none;
+height:100%;
+}
+
+#desktopWallpaper{
+position:fixed;
+inset:0;
+background-image:url("https://i.pinimg.com/736x/1a/29/c3/1a29c35d976d49f093c439bb3917cc32.jpg");
+background-size:cover;
+background-position:center;
+}
+
+/* TOP BAR */
+#topbar{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:34px;
+background:rgba(120,0,255,0.6);
+backdrop-filter:blur(10px);
+display:flex;
+align-items:center;
+padding-left:12px;
+color:white;
+font-weight:bold;
+z-index:100;
+}
+
+/* ================= DOCK ================= */
+#dock{
+position:fixed;
+bottom:12px;
+left:50%;
+transform:translateX(-50%);
+display:flex;
+gap:14px;
+padding:10px 16px;
+background:rgba(120,0,255,0.25);
+backdrop-filter:blur(12px);
+border-radius:20px;
+}
+
+.icon{
+width:52px;
+height:52px;
+border-radius:14px;
+overflow:hidden;
+cursor:pointer;
+transition:0.15s;
+}
+
+.icon img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+.icon:hover{
+transform:translateY(-3px) scale(1.05);
+}
+
+/* ================= WINDOWS ================= */
+.window{
+position:absolute;
+top:90px;
+left:100px;
+width:720px;
+height:460px;
+background:rgba(25,25,30,0.97);
+border-radius:14px;
+display:none;
+flex-direction:column;
+overflow:hidden;
+color:white;
+box-shadow:0 30px 100px rgba(0,0,0,0.8);
+z-index:50;
+}
+
+/* TITLE BAR */
+.titlebar{
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:8px 12px;
+background:rgba(50,50,60,0.85);
+cursor:grab;
+}
+
+.traffic{
+display:flex;
+gap:8px;
+}
+
+.dot{
+width:12px;
+height:12px;
+border-radius:50%;
+cursor:pointer;
+}
+
+.red{background:#ff5f57;}
+.yellow{background:#febc2e;}
+.green{background:#28c840;}
+
+.content{
+flex:1;
+padding:10px;
+overflow:auto;
+}
+
+iframe{
+width:100%;
+height:100%;
+border:none;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- LOCK -->
+<div id="lockScreen">
+<div id="lockWallpaper"></div>
+<div class="systemBar">System Login</div>
+
+<div class="lockGlass">
+<div class="loginBox">
+<input id="u" placeholder="Username">
+<input id="p" type="password" placeholder="Password">
+<button onclick="login()">Sign In</button>
+</div>
+</div>
+</div>
+
+<!-- DESKTOP -->
+<div id="desktop">
+
+<div id="desktopWallpaper"></div>
+<div id="topbar">MacintoshOS GX</div>
+
+<!-- DOCK -->
+<div id="dock">
+
+<div class="icon" onclick="openApp('finder')">
+<img src="https://i.pinimg.com/736x/e2/b7/48/e2b74811d8f20d1373ec2d085d1fcfb7.jpg">
+</div>
+
+<div class="icon" onclick="openApp('gx')">
+<img src="https://i.pinimg.com/736x/1a/1f/c7/1a1fc733e379a2c27b0b9d239192284b.jpg">
+</div>
+
+<div class="icon" onclick="openApp('settings')">
+<img src="https://i.pinimg.com/736x/af/68/d4/af68d40f6983c0e3a15a935fec786ccb.jpg">
+</div>
+
+<div class="icon" onclick="openApp('spotify')">
+<img src="https://i.pinimg.com/736x/b5/4b/fa/b54bfa421ef99f52251052f79db30e63.jpg">
+</div>
+
+<div class="icon" onclick="openApp('youtube')">
+<img src="https://i.pinimg.com/736x/0e/3b/94/0e3b94a92152d146429e9e468cdd62d6.jpg">
+</div>
+
+</div>
+
+<!-- FINDER -->
+<div class="window" id="finder">
+<div class="titlebar">
+<div class="traffic">
+<div class="dot red" onclick="closeApp('finder')"></div>
+<div class="dot yellow"></div>
+<div class="dot green" onclick="toggleFull('finder')"></div>
+</div>
+Finder
+</div>
+<div class="content">
+📁 flandre.txt<br>
+📁 remilia.txt<br>
+📁 reimu.txt<br>
+📁 marisa.txt
+</div>
+</div>
+
+<!-- GX -->
+<div class="window" id="gx">
+<div class="titlebar">
+<div class="traffic">
+<div class="dot red" onclick="closeApp('gx')"></div>
+<div class="dot yellow"></div>
+<div class="dot green" onclick="toggleFull('gx')"></div>
+</div>
+Opera GX
+</div>
+<div class="content">
+<input id="gxSearch" placeholder="Search Bing" style="width:100%;padding:10px;">
+<button onclick="goGX()">Search</button>
+<iframe id="gxFrame"></iframe>
+</div>
+</div>
+
+<!-- SETTINGS -->
+<div class="window" id="settings">
+<div class="titlebar">
+<div class="traffic">
+<div class="dot red" onclick="closeApp('settings')"></div>
+<div class="dot yellow"></div>
+<div class="dot green" onclick="toggleFull('settings')"></div>
+</div>
+Settings
+</div>
+<div class="content">
+WiFi<br>
+Display<br>
+Sound<br>
+Privacy
+</div>
+</div>
+
+<!-- SPOTIFY -->
+<div class="window" id="spotify">
+<div class="titlebar">
+<div class="traffic">
+<div class="dot red" onclick="closeApp('spotify')"></div>
+<div class="dot yellow"></div>
+<div class="dot green" onclick="toggleFull('spotify')"></div>
+</div>
+Spotify
+</div>
+<div class="content">
+<audio controls>
+<source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">
+</audio>
+</div>
+</div>
+
+<!-- YOUTUBE -->
+<div class="window" id="youtube">
+<div class="titlebar">
+<div class="traffic">
+<div class="dot red" onclick="closeApp('youtube')"></div>
+<div class="dot yellow"></div>
+<div class="dot green" onclick="toggleFull('youtube')"></div>
+</div>
+YouTube
+</div>
+<div class="content">
+<input id="yt" placeholder="Video ID">
+<button onclick="loadYT()">Load</button>
+<iframe id="ytFrame"></iframe>
+</div>
+</div>
+
+</div>
+
+<script>
+
+let logged=false;
+
+/* LOGIN */
+function login(){
+if(!document.getElementById("u").value) return;
+if(!document.getElementById("p").value) return;
+
+logged=true;
+document.getElementById("lockScreen").style.display="none";
+document.getElementById("desktop").style.display="block";
+}
+
+/* OPEN APPS */
+function openApp(id){
+if(!logged) return;
+document.getElementById(id).style.display="flex";
+}
+
+/* CLOSE */
+function closeApp(id){
+document.getElementById(id).style.display="none";
+}
+
+/* BING GX */
+function goGX(){
+let q=document.getElementById("gxSearch").value;
+document.getElementById("gxFrame").src=
+"https://www.bing.com/search?q="+encodeURIComponent(q);
+}
+
+/* YOUTUBE */
+function loadYT(){
+let id=document.getElementById("yt").value;
+document.getElementById("ytFrame").src=
+"https://www.youtube.com/embed/"+id;
+}
+
+/* FULLSCREEN SYSTEM (GREEN BUTTON) */
+let maxed={};
+
+function toggleFull(id){
+let w=document.getElementById(id);
+
+if(!maxed[id]){
+w.dataset.top=w.style.top;
+w.dataset.left=w.style.left;
+w.dataset.w=w.style.width;
+w.dataset.h=w.style.height;
+
+w.style.top="0";
+w.style.left="0";
+w.style.width="100%";
+w.style.height="100%";
+
+maxed[id]=true;
+}else{
+w.style.top=w.dataset.top||"90px";
+w.style.left=w.dataset.left||"100px";
+w.style.width=w.dataset.w||"720px";
+w.style.height=w.dataset.h||"460px";
+
+maxed[id]=false;
+}
+}
+
+/* DRAG WINDOWS */
+let drag=null,ox=0,oy=0;
+
+document.addEventListener("mousedown",(e)=>{
+let win=e.target.closest(".window");
+if(!win) return;
+
+drag=win;
+ox=e.clientX-win.offsetLeft;
+oy=e.clientY-win.offsetTop;
+});
+
+document.addEventListener("mousemove",(e)=>{
+if(!drag) return;
+
+drag.style.left=(e.clientX-ox)+"px";
+drag.style.top=(e.clientY-oy)+"px";
+});
+
+document.addEventListener("mouseup",()=>drag=null);
+
+</script>
+
+</body>
+</html>
